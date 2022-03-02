@@ -25,16 +25,21 @@ export class PlaylistDetailComponent implements OnInit {
     this.playlist$ = this.playlistService.getOne(this.route.snapshot.params.id);
   }
 
-  delete(todo: Todo) {
-    // this.playlistService.removeTodo(this.playlist.id, todo);
-    // this.playlist = this.playlistService.getOne(+this.route.snapshot.params.id);
+  updateTodo(playlistId : string, todo : Todo)
+  {
+    this.playlistService.updateTodo(playlistId, todo.id, todo)
   }
 
-  async openModal() {
+  delete(playlistId : string, todoId : string) {
+    this.playlistService.removeTodo(playlistId, todoId);
+  }
+
+  async openModal(playlistId : string, todo : Todo) {
     const modal = await this.modalController.create({
       component: CreateTodoComponent,
       componentProps: {
-        playlistId: this.playlist$.subscribe(el => el.id)
+        playlistId: playlistId,
+        todo: todo
       }
     });
     await modal.present();

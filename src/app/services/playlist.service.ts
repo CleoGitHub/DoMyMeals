@@ -4,6 +4,7 @@ import { Todo } from '../models/todo';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+// import { getFirestore } from "firebase-admin/firestore";
 
 
 @Injectable({
@@ -12,11 +13,14 @@ import { Observable } from 'rxjs';
 export class PlaylistService {
 
   collection : AngularFirestoreCollection<Playlist> = null;
+  // adminFirestore : FirebaseFirestore.Firestore;
+  MAX_RETRY_ATTEMPTS : number = 5;
 
   constructor(
     private afs: AngularFirestore
   ) {
       this.collection = this.afs.collection<Playlist>('playlists');
+      // this.adminFirestore = getFirestore()
   }
 
   getAll() {
@@ -37,27 +41,36 @@ export class PlaylistService {
   }
 
   addPlaylist(playlist: Playlist) {
-    // this.playlists = this.playlists.concat(playlist);
+    this.afs.collection<Playlist>('playlists').add(Object.assign({}, playlist))
   }
 
-  removePlaylist(playlist: Playlist) {
-    // this.playlists = this.playlists.filter(p => p.id !== playlist.id);
+  removePlaylist(playlistId: string) {
+    // const bulkWriter = this.adminFirestore.bulkWriter();
+    // bulkWriter
+    // .onWriteError((error) => {
+    //   if (
+    //     error.failedAttempts < this.MAX_RETRY_ATTEMPTS
+    //   ) {
+    //     return true;
+    //   } else {
+    //     console.log('Failed write at document: ', error.documentRef.path);
+    //     return false;
+    //   }
+    // });
+    // this.adminFirestore.recursiveDelete(this.adminFirestore.doc('playlists/' + playlistId), bulkWriter)
   }
 
   addTodo(playlistId: string, todo: Todo) {
-    this.collection.doc<Playlist>(playlistId).collection<Todo>('todos').add({
-      name: 'test',
-      description: 'test',
-      isDone: false
-    })
-    .then(response => console.log(response))
-    .catch(error => console.log(error))
+    this.afs.collection<Todo>('playlists/' +  playlistId + '/todos').add(Object.assign({}, todo))
+    .catch(error => console.log("error", error))
   }
 
-  removeTodo(playlistId: number, todo: Todo) {
-    // const playlistIndex = this.playlists.findIndex(p => p.id === playlistId);
-    // if (this.playlists[playlistIndex]) {
-    //   this.playlists[playlistIndex].todos = this.playlists[playlistIndex].todos.filter(t => t.id !== todo.id);
-    // }
+  updateTodo(playlistId : string, todoId: string, todo : Todo) {
+    this.afs.doc<Todo>('playlists/' +  playlistId + '/todos/' + todoId).set(Object.assign({}, todo))
+    .catch(error => console.log("error", error))
+  }
+
+  removeTodo(playlistId: string, todoId: string) {
+    this.afs.doc<Todo>('playlists/' + playlistId + '/todos/' + todoId).delete()
   }
 }

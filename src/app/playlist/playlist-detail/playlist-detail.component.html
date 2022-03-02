@@ -1,33 +1,42 @@
 <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>
-        {{ (playlist$ | async)?.name | titlecase}}
-      </ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content [fullscreen]="true">
+  <ion-breadcrumbs>
+    <ion-breadcrumb [routerLink]="'/playlist/'" routerLinkActive="true">
+      Playlist
+    </ion-breadcrumb>
+    <ion-breadcrumb>
+      {{ (playlist$ | async)?.name}}
+    </ion-breadcrumb>
+  </ion-breadcrumbs>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ng-container *ngIf="playlist$ | async  as playlist">
     <ion-header collapse="condense">
       <ion-toolbar>
-        <ion-title size="large">{{ (playlist$ | async)?.name | titlecase}}</ion-title>
+        <ion-title size="large">{{ playlist?.name | titlecase}}</ion-title>
       </ion-toolbar>
     </ion-header>
-  
+
     <div id="container">
-      <ion-list>  
-        <ion-item-sliding *ngFor="let todo of  ((playlist$ | async)?.todos)">
+      <ion-list>
+        <ion-item-sliding *ngFor="let todo of  (playlist?.todos)">
+          <ion-item-options side="start">
+            <ion-item-option (click)="openModal(playlist?.id, todo)" color="primary">
+              <ion-icon slot="icon-only" name="pencil"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
           <ion-item>
             <ion-label>{{ todo.name }}</ion-label>
+            <ion-checkbox [(ngModel)]="todo.isDone" (ngModelChange)="updateTodo(playlist.id, todo)" checked="todo.isDone" color="success" type="ios"></ion-checkbox>
           </ion-item>
           <ion-item-options side="end">
-            <ion-item-option (click)="delete(todo)" color="danger">
+            <ion-item-option (click)="delete(playlist?.id, todo?.id)" color="danger">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
-  
       </ion-list>
-  
-      <ion-button expand="block" (click)="openModal()">Add Todo</ion-button>
+      <ion-button expand="block" (click)="openModal(playlist?.id)">Add Todo</ion-button>
     </div>
-  </ion-content>
+  </ng-container>
+</ion-content>

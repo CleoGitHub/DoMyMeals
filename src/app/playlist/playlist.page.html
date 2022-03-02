@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Playlists
-    </ion-title>
-  </ion-toolbar>
+  <ion-breadcrumbs>
+    <ion-breadcrumb>
+      Playlist
+    </ion-breadcrumb>
+  </ion-breadcrumbs>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -12,20 +12,17 @@
       <ion-title size="large">Playlists</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <div id="container">
     <ion-list>
       <ion-item-sliding *ngFor="let playlist of playlists$ | async;">
         <ion-item [routerLink]="[playlist?.id]" routerLinkActive="true">
           <ion-label>{{ playlist.name }}</ion-label>
         </ion-item>
         <ion-item-options side="end">
-          <ion-item-option (click)="delete(playlist)" color="danger">
+          <ion-item-option (click)="delete(playlist.id)" color="danger">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
     <ion-button expand="block" (click)="openModal()">Add Playlist</ion-button>
-  </div>
 </ion-content>

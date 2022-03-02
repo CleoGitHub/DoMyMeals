@@ -4,7 +4,7 @@ import { PlaylistDetailComponent } from './playlist-detail.component';
 import { PlaylistDetailRoutingModule } from './playlist-detail-routing.module';
 import { IonicModule } from '@ionic/angular';
 import { CreateTodoComponent } from 'src/app/modals/create-todo/create-todo.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -16,7 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     IonicModule,
     ReactiveFormsModule,
-    PlaylistDetailRoutingModule
+    PlaylistDetailRoutingModule,
+    FormsModule
   ]
 })
 export class PlaylistDetailModule { }

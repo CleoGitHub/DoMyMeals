@@ -24,11 +24,10 @@ export class PlaylistPage implements OnInit {
 
   ngOnInit(): void {
     this.playlists$ = this.playlistService.getAll()
-    this.playlists$.forEach(el => console.log(el))
   }
 
-  delete(playlist: Playlist) {
-    this.playlistService.removePlaylist(playlist);
+  delete(playlistId : string) {
+    this.playlistService.removePlaylist(playlistId);
   }
 
   async openModal() {
