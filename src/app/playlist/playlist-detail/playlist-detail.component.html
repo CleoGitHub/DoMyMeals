@@ -15,7 +15,7 @@
   
     <div id="container">
       <ion-list>  
-        <ion-item-sliding *ngFor="let todo of (playlist$ | async)?.todos">
+        <ion-item-sliding *ngFor="let todo of  ((playlist$ | async)?.todos)">
           <ion-item>
             <ion-label>{{ todo.name }}</ion-label>
           </ion-item>

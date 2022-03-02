@@ -15,6 +15,7 @@ import { EMPTY, Observable } from 'rxjs';
 export class PlaylistDetailComponent implements OnInit {
 
   public playlist$: Observable<Playlist> = EMPTY;
+  public todos$: Observable<Todo[]> = EMPTY;
 
   constructor(private route: ActivatedRoute,
     private playlistService: PlaylistService,
@@ -30,14 +31,13 @@ export class PlaylistDetailComponent implements OnInit {
   }
 
   async openModal() {
-    // const modal = await this.modalController.create({
-    //   component: CreateTodoComponent,
-    //   componentProps: {
-    //     playlistId: this.playlist$
-    //   }
-    // });
-    // await modal.present();
-    // this.playlist = this.playlistService.getOne(+this.route.snapshot.params.id);
+    const modal = await this.modalController.create({
+      component: CreateTodoComponent,
+      componentProps: {
+        playlistId: this.playlist$.subscribe(el => el.id)
+      }
+    });
+    await modal.present();
   }
 
 }
