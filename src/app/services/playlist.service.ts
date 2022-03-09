@@ -4,7 +4,6 @@ import { Todo } from '../models/todo';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-// import { getFirestore } from "firebase-admin/firestore";
 
 
 @Injectable({
@@ -13,14 +12,12 @@ import { Observable } from 'rxjs';
 export class PlaylistService {
 
   collection : AngularFirestoreCollection<Playlist> = null;
-  // adminFirestore : FirebaseFirestore.Firestore;
   MAX_RETRY_ATTEMPTS : number = 5;
 
   constructor(
     private afs: AngularFirestore
   ) {
       this.collection = this.afs.collection<Playlist>('playlists');
-      // this.adminFirestore = getFirestore()
   }
 
   getAll() {
@@ -45,19 +42,11 @@ export class PlaylistService {
   }
 
   removePlaylist(playlistId: string) {
-    // const bulkWriter = this.adminFirestore.bulkWriter();
-    // bulkWriter
-    // .onWriteError((error) => {
-    //   if (
-    //     error.failedAttempts < this.MAX_RETRY_ATTEMPTS
-    //   ) {
-    //     return true;
-    //   } else {
-    //     console.log('Failed write at document: ', error.documentRef.path);
-    //     return false;
-    //   }
-    // });
-    // this.adminFirestore.recursiveDelete(this.adminFirestore.doc('playlists/' + playlistId), bulkWriter)
+    this.afs.collection<Todo>("playlists/" + playlistId + "/todos").get().toPromise().then((querySnapshot) => {
+      Promise.all(querySnapshot.docs.map((doc) => doc.ref.delete())).then(() => {
+        this.afs.doc<Playlist>("/playlists/" + playlistId).ref.delete();
+      });
+    })
   }
 
   addTodo(playlistId: string, todo: Todo) {
