@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mon Compte</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- display user name -->
+  <ion-item>
+    <ion-title size="large">{{ (user | async).email }}</ion-title>
+  </ion-item>
+<!-- disconnect button -->
+<ion-button expand="block" (click)="signOut()" color="primary">Se déconnecter</ion-button>
+</ion-content>
