@@ -15,8 +15,6 @@ export class AuthService {
   constructor(private auth: AngularFireAuth, private router: Router) {
     this.auth.authState.subscribe(user => {
       this.connectedUser.next(user);
-      console.log(this.connectedUser.value)
-      router.navigate(['']);
     });
   }
 
@@ -28,15 +26,23 @@ export class AuthService {
     return this.connectedUser.asObservable();
   }
 
-  register(email: string, password:string){
-    return this.auth.createUserWithEmailAndPassword(email, password);
+  async register(email: string, password:string){
+    await this.auth.createUserWithEmailAndPassword(email, password);
+    await (await this.auth.currentUser).sendEmailVerification();
+    await this.auth.signOut().then(() => {
+      this.router.navigate(['/login']);
+    });
   }
 
   signIn(email: string, password:string){
-    return this.auth.signInWithEmailAndPassword(email, password)
+    return this.auth.signInWithEmailAndPassword(email, password).then(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   signOut(){
-    return this.auth.signOut();
+    return this.auth.signOut().then(() => {
+      this.router.navigate(['/login']);
+    });
   }
 }
