@@ -3,25 +3,36 @@ import { Playlist } from '../models/playlist';
 import { Todo } from '../models/todo';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { map, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-
+import { combineLatest, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaylistService {
 
-  collection : AngularFirestoreCollection<Playlist> = null;
+  collection: AngularFirestoreCollection<Playlist>;
   MAX_RETRY_ATTEMPTS : number = 5;
 
   constructor(
-    private afs: AngularFirestore
-  ) {
-      this.collection = this.afs.collection<Playlist>('playlists');
-  }
+    private afs: AngularFirestore,
+    private auth: AuthService
+    ) {
+    this.collection = afs.collection<Playlist>('playlists');
+  
+    }
 
-  getAll() {
-    return this.collection.valueChanges({idField: 'id'});
+  getAll(): Observable<Playlist[]> {
+    let collectionsOwned = this.afs.collection<Playlist>('playlists', ref => ref.where("owner", "==", this.auth.getConnectedUserUID())).valueChanges({idField: 'id'});
+    let collectionsCanRead = this.afs.collection<Playlist>('playlists', ref => ref.where("canRead", "array-contains", this.auth.getConnectedUserUID())).valueChanges({idField: 'id'});; 
+
+    return combineLatest([collectionsOwned, collectionsCanRead]).pipe(
+      map(results => {
+        let owned = results[0];
+        let shared = results[1];
+        return owned.concat(shared);
+      }
+    ));
   }
 
   getOne(id: string): Observable<Playlist> {
