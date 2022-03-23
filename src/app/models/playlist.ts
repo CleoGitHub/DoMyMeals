@@ -1,4 +1,5 @@
 export class Playlist {
+    owner: string;
     id: number;
     name: string;
 

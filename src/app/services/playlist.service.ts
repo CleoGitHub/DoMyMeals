@@ -5,7 +5,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { map, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-
+import { ToastController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +15,8 @@ export class PlaylistService {
 
   constructor(
     private afs: AngularFirestore,
-    private auth: AuthService
+    private auth: AuthService,
+    private toastController: ToastController
     ) {}
 
   getAll(): Observable<Playlist[]> {
@@ -47,28 +48,67 @@ export class PlaylistService {
   }
 
   addPlaylist(playlist: Playlist) {
-    this.afs.collection<Playlist>('playlists').add(Object.assign({}, playlist))
+    playlist.owner = this.auth.getConnectedUserAsValue().uid;
+    this.afs.collection<Playlist>('playlists').add(Object.assign({}, playlist)).then
+    (() => {
+      this.toastController.create({
+        message: 'Playlist créée',
+        duration: 3000,
+        color: 'success'
+      }).then(toast => toast.present());
+    });
   }
 
   removePlaylist(playlistId: string) {
     this.afs.collection<Todo>("playlists/" + playlistId + "/todos").get().toPromise().then((querySnapshot) => {
       Promise.all(querySnapshot.docs.map((doc) => doc.ref.delete())).then(() => {
-        this.afs.doc<Playlist>("/playlists/" + playlistId).ref.delete();
+        this.afs.doc<Playlist>("/playlists/" + playlistId).ref.delete().then
+        (() => {
+          this.toastController.create({
+            message: 'Playlist supprimée',
+            duration: 3000,
+            color: 'success'
+            }).then(toast => toast.present());
+          });
+      }).catch(error => {
+        this.toastController.create({
+          message: 'Erreur lors de la suppression de la playlist',
+          duration: 3000,
+          color: 'danger'
+          }).then(toast => toast.present());
       });
     })
   }
 
   addTodo(playlistId: string, todo: Todo) {
     this.afs.collection<Todo>('playlists/' +  playlistId + '/todos').add(Object.assign({}, todo))
-    .catch(error => console.log("error", error))
+    .catch(error => {
+      this.toastController.create({
+        message: 'Erreur lors de l\'ajout du todo',
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    });
   }
 
   updateTodo(playlistId : string, todoId: string, todo : Todo) {
     this.afs.doc<Todo>('playlists/' +  playlistId + '/todos/' + todoId).set(Object.assign({}, todo))
-    .catch(error => console.log("error", error))
+    .catch(error => {
+      this.toastController.create({
+        message: 'Erreur lors de la modification du todo',
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    })
   }
 
   removeTodo(playlistId: string, todoId: string) {
-    this.afs.doc<Todo>('playlists/' + playlistId + '/todos/' + todoId).delete()
+    this.afs.doc<Todo>('playlists/' + playlistId + '/todos/' + todoId).delete().catch(error => {
+      this.toastController.create({
+        message: 'Erreur lors de la suppression du todo',
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    });
   }
 }

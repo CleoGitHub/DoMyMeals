@@ -78,6 +78,12 @@ export class AuthService {
   signOut(){
     return this.auth.signOut().then(() => {
       this.router.navigate(['/login']);
+    }).catch(error => {
+      this.toastController.create({
+        message: error.message,
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
     });
   }
 }
