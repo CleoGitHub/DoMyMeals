@@ -26,6 +26,14 @@ export class AuthService {
     return this.connectedUser.asObservable();
   }
 
+  getConnectedUserUID(){
+    if (this.isSignedIn()) {
+      return this.connectedUser.value.uid;
+    } else {
+      return null;
+    }
+  }
+
   async register(email: string, password:string){
     await this.auth.createUserWithEmailAndPassword(email, password).catch(error => {
       this.toastController.create({
