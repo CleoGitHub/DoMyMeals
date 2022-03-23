@@ -7,7 +7,7 @@
 <ion-content>
   <!-- display user name -->
   <ion-item>
-    <ion-title size="large">{{ (user | async).email }}</ion-title>
+    <ion-title size="large">{{ (user | async)?.email }}</ion-title>
   </ion-item>
 <!-- disconnect button -->
 <ion-button expand="block" (click)="signOut()" color="primary">Se déconnecter</ion-button>
