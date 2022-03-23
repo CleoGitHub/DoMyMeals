@@ -83,6 +83,23 @@ export class PlaylistService {
     })
   }
 
+  sharePlaylist(playlist : Playlist, email, canRead, canWrite) {
+    if (canRead && playlist.canRead.indexOf(email) == -1)
+      playlist.canRead.push(email);
+    
+    if (canWrite && playlist.canWrite.indexOf(email) == -1)
+      playlist.canWrite.push(email);
+
+
+    this.afs.doc<Playlist>('playlists/' + playlist.id).set(Object.assign({}, playlist)).catch(error => {
+      this.toastController.create({
+        message: 'Erreur lors de la modification de la playlist',
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    });
+  }
+
   addTodo(playlistId: string, todo: Todo) {
     this.afs.collection<Todo>('playlists/' +  playlistId + '/todos').add(Object.assign({}, todo))
     .catch(error => {

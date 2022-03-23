@@ -5,12 +5,14 @@ import { PlaylistDetailRoutingModule } from './playlist-detail-routing.module';
 import { IonicModule } from '@ionic/angular';
 import { CreateTodoComponent } from 'src/app/modals/create-todo/create-todo.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { SharePlaylistComponent } from 'src/app/modals/share-playlist/share-playlist.component';
 
 
 @NgModule({
   declarations: [
     PlaylistDetailComponent,
-    CreateTodoComponent
+    CreateTodoComponent,
+    SharePlaylistComponent,
   ],
   imports: [
     CommonModule,

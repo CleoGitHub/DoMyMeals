@@ -6,6 +6,7 @@ import { Playlist } from 'src/app/models/playlist';
 import { Todo } from 'src/app/models/todo';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { EMPTY, Observable } from 'rxjs';
+import { SharePlaylistComponent } from 'src/app/modals/share-playlist/share-playlist.component';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -40,6 +41,16 @@ export class PlaylistDetailComponent implements OnInit {
       componentProps: {
         playlistId: playlistId,
         todo: todo
+      }
+    });
+    await modal.present();
+  }
+
+  async openShareModal(playlist : Playlist) {
+    const modal = await this.modalController.create({
+      component: SharePlaylistComponent,
+      componentProps: {
+        playlist: playlist,
       }
     });
     await modal.present();

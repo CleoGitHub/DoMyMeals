@@ -6,6 +6,7 @@ import { PlaylistService } from '../services/playlist.service';
 import { EMPTY, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { SharePlaylistComponent } from '../modals/share-playlist/share-playlist.component';
 
 @Component({
   selector: 'app-playlist',
@@ -37,5 +38,4 @@ export class PlaylistPage implements OnInit {
     await modal.present();
     // this.playlists = this.playlistService.getAll();
   }
-
 }
