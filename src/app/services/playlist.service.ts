@@ -20,15 +20,18 @@ export class PlaylistService {
 
   getAll(): Observable<Playlist[]> {
     let collectionsOwned = this.afs.collection<Playlist>('playlists', ref => ref.where("owner", "==", this.auth.getConnectedUserAsValue().uid)).valueChanges({idField: 'id'});
-    let collectionsCanRead = this.afs.collection<Playlist>('playlists', ref => ref.where("canRead", "array-contains", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});; 
-    let collectionsCanWrite = this.afs.collection<Playlist>('playlists', ref => ref.where("canWrite", "array-contains", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});; 
+    let collectionsCanRead = this.afs.collection<Playlist>('playlists', ref => ref.where("canRead", "array-contains", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});
+    let collectionsCanWrite = this.afs.collection<Playlist>('playlists', ref => ref.where("canWrite", "array-contains", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});
 
     return combineLatest([collectionsOwned, collectionsCanRead, collectionsCanWrite]).pipe(
       map(results => {
         let owned = results[0];
         let sharedAsReader = results[1];
         let sharedAsWriter = results[2];
-        return owned.concat(sharedAsReader).concat(sharedAsWriter);
+        return [...owned, ...sharedAsReader, ...sharedAsWriter].reduce(
+          (arrayAccumulateur, currentValue) => { return arrayAccumulateur.filter(el => el.id == currentValue.id).length == 0 ?  arrayAccumulateur.concat(currentValue) : arrayAccumulateur }
+          ,[]
+        );
       }
     ));
   }
