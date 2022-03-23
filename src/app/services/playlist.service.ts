@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class PlaylistService {
-  
+
   MAX_RETRY_ATTEMPTS : number = 5;
 
   constructor(
@@ -19,7 +19,7 @@ export class PlaylistService {
     ) {}
 
   getAll(): Observable<Playlist[]> {
-    let collectionsOwned = this.afs.collection<Playlist>('playlists', ref => ref.where("owner", "==", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});
+    let collectionsOwned = this.afs.collection<Playlist>('playlists', ref => ref.where("owner", "==", this.auth.getConnectedUserAsValue().uid)).valueChanges({idField: 'id'});
     let collectionsCanRead = this.afs.collection<Playlist>('playlists', ref => ref.where("canRead", "array-contains", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});; 
 
     return combineLatest([collectionsOwned, collectionsCanRead]).pipe(
