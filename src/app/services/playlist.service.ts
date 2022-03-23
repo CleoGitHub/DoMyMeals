@@ -83,11 +83,11 @@ export class PlaylistService {
     })
   }
 
-  sharePlaylist(playlist : Playlist, email, canRead, canWrite) {
-    if (canRead && playlist.canRead.indexOf(email) == -1)
+  sharePlaylist(playlist : Playlist, email, shareAccess) {
+    if (!shareAccess && playlist.canRead.indexOf(email) == -1)
       playlist.canRead.push(email);
     
-    if (canWrite && playlist.canWrite.indexOf(email) == -1)
+    if (shareAccess && playlist.canWrite.indexOf(email) == -1)
       playlist.canWrite.push(email);
 
 

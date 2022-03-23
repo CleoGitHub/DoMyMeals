@@ -13,29 +13,20 @@ import { Playlist } from 'src/app/models/playlist';
 export class SharePlaylistComponent implements OnInit {
   @Input() playlist: Playlist;
 
-  checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => { 
-    let canRead = group.get('canRead').value;
-    let canWrite = group.get('canWrite').value
-    return canRead || canWrite ? null : { notSame: true }
-  }
 
   shareForm: FormGroup
 
   constructor(private fb: FormBuilder, private modalController: ModalController, private playlistService: PlaylistService) {
     this.shareForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      canRead: [true],
-      canWrite: [false], 
-    },
-    {
-      validators: [this.checkPasswords.bind(this)]
-    });
-  }
+      shareAccess: [true],
+    })
+    }
 
   ngOnInit() {}
 
   share(){
-    this.playlistService.sharePlaylist(this.playlist, this.shareForm.get('email').value, this.shareForm.get('canRead').value, this.shareForm.get('canWrite').value);
+    this.playlistService.sharePlaylist(this.playlist, this.shareForm.get('email').value, this.shareForm.get('shareAccess').value);
     this.modalController.dismiss();
   }
 
