@@ -10,21 +10,17 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class PlaylistService {
-
-  collection: AngularFirestoreCollection<Playlist>;
+  
   MAX_RETRY_ATTEMPTS : number = 5;
 
   constructor(
     private afs: AngularFirestore,
     private auth: AuthService
-    ) {
-    this.collection = afs.collection<Playlist>('playlists');
-  
-    }
+    ) {}
 
   getAll(): Observable<Playlist[]> {
-    let collectionsOwned = this.afs.collection<Playlist>('playlists', ref => ref.where("owner", "==", this.auth.getConnectedUserUID())).valueChanges({idField: 'id'});
-    let collectionsCanRead = this.afs.collection<Playlist>('playlists', ref => ref.where("canRead", "array-contains", this.auth.getConnectedUserUID())).valueChanges({idField: 'id'});; 
+    let collectionsOwned = this.afs.collection<Playlist>('playlists', ref => ref.where("owner", "==", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});
+    let collectionsCanRead = this.afs.collection<Playlist>('playlists', ref => ref.where("canRead", "array-contains", this.auth.getConnectedUserAsValue().email)).valueChanges({idField: 'id'});; 
 
     return combineLatest([collectionsOwned, collectionsCanRead]).pipe(
       map(results => {
@@ -36,7 +32,7 @@ export class PlaylistService {
   }
 
   getOne(id: string): Observable<Playlist> {
-    const doc =  this.collection.doc<Playlist>(id);
+    const doc =  this.afs.collection<Playlist>('playlists').doc<Playlist>(id);
     const todosCollection = doc.collection<Todo>('todos');
     return doc.valueChanges({idField: 'id'}).pipe(
       switchMap(playlist => todosCollection.valueChanges({idField: 'id'}).pipe(

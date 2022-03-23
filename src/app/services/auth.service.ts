@@ -26,9 +26,9 @@ export class AuthService {
     return this.connectedUser.asObservable();
   }
 
-  getConnectedUserUID(){
+  getConnectedUserAsValue(){
     if (this.isSignedIn()) {
-      return this.connectedUser.value.uid;
+      return this.connectedUser.value;
     } else {
       return null;
     }
