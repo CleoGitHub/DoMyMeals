@@ -25,4 +25,8 @@
       </ion-item-sliding>
     </ion-list>
   </ion-content>
-  <ion-button expand="block" style="position:absolute;bottom:0; width:100%" (click)="openModal()">Ajouter une Playlist</ion-button>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="openModal()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>

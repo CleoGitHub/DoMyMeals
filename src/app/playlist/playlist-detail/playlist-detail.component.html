@@ -40,7 +40,11 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
-      <ion-button expand="block" style="position:fixed; bottom:56px; width:100%" (click)="openModal(playlist?.id)">Ajouter un Todo</ion-button>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="openModal(playlist?.id)">
+        <ion-fab-button>
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </div>
   </ng-container>
 </ion-content>
