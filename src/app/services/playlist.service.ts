@@ -52,6 +52,8 @@ export class PlaylistService {
 
   addPlaylist(playlist: Playlist) {
     playlist.owner = this.auth.getConnectedUserAsValue().uid;
+    playlist.canRead = [];
+    playlist.canWrite = [];
     this.afs.collection<Playlist>('playlists').add(Object.assign({}, playlist)).then
     (() => {
       this.toastController.create({
