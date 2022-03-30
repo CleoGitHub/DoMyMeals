@@ -15,7 +15,7 @@
                     <ion-badge>Écriture</ion-badge>
                 </div>
             </ion-item>
-            <ion-button [disabled]="shareForm.invalid" expand="block" type="submit">Partager</ion-button>
+            <ion-button [disabled]="shareForm.invalid || hasUserWriteAccess(playlist)" expand="block" type="submit">Partager</ion-button>
         </form>
         <h2 style="margin-left:0.5rem">Utilisateurs ayant accès</h2>
         <ion-list>
@@ -25,7 +25,7 @@
                         <ion-badge class="ion-margin-end">Écriture</ion-badge>
                         <ion-label>{{ writeUser }}</ion-label>
                     </div>
-                    <ion-button (click)="removeWriteUser(playlist, writeUser)" fill="clear" color="danger">
+                    <ion-button *ngIf="hasUserWriteAccess(playlist)" (click)="removeWriteUser(playlist, writeUser)" fill="clear" color="danger">
                         <ion-icon slot="icon-only" name="close"></ion-icon>
                 </ion-button>
                 </div>
@@ -36,7 +36,7 @@
                         <ion-badge class="ion-margin-end">Lecture</ion-badge>
                         <ion-label>{{ readUser }}</ion-label>
                     </div>
-                    <ion-button (click)="removeReadUser(playlist, readUser)" fill="clear" color="danger">
+                    <ion-button *ngIf="hasUserWriteAccess(playlist)" (click)="removeReadUser(playlist, readUser)" fill="clear" color="danger">
                         <ion-icon slot="icon-only" name="close"></ion-icon>
                 </ion-button>
                 </div>
