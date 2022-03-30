@@ -3,11 +3,15 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ToastController } from '@ionic/angular';
+import { GoogleAuthProvider } from "firebase/auth";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  // GoogleAuthProvider
+  private provider = new GoogleAuthProvider();
 
   // Firebase User
   private connectedUser = new BehaviorSubject(null);
@@ -74,6 +78,33 @@ export class AuthService {
         }).then(toast => toast.present());
     });
   }
+
+  signInWithGoogle(){ 
+    return this.auth.signInWithPopup(this.provider).then(() => {
+      this.auth.currentUser.then(user => {
+        if (!user.emailVerified) {
+          this.toastController.create({
+            message: 'Veuillez vérifier votre email',
+            duration: 3000,
+            color: 'warning'
+          }).then(toast => toast.present());
+          this.auth.signOut().then(() => {
+            this.router.navigate(['/login']);
+          });
+        } else {
+          this.router.navigate(['/']);
+        }
+      });
+    })
+    .catch(error => {
+      this.toastController.create({
+        message: error.message,
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    });
+  }
+
 
   signOut(){
     return this.auth.signOut().then(() => {
