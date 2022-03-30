@@ -1,20 +1,46 @@
 <div>
-    <h2 style="margin-left:0.5rem">Partager une Playlist</h2>
-    <form [formGroup]="shareForm" (ngSubmit)="share()">
-        <ion-item>
-            <ion-label position="stacked">Email de l'utilisateur avec qui partager la playlist</ion-label>
-            <ion-input formControlName="email"></ion-input>
-        </ion-item>
-        <!-- toggle canRead/canWrite -->
-        <ion-item>
-            <ion-label>Droit d'accès</ion-label>
-            <div class="" style="display:flex; align-items:center">
-                <ion-badge>Lecture</ion-badge>
-                <ion-toggle formControlName="shareAccess"></ion-toggle>            
-                <ion-badge>Écriture</ion-badge>
-
-            </div>
-        </ion-item>
-        <ion-button style="position: absolute; bottom:0; width:100%" [disabled]="shareForm.invalid" expand="block" type="submit">Partager</ion-button>
-    </form>
+    <ng-container *ngIf="playlist$ | async as playlist">
+        <h2 style="margin-left:0.5rem">Partager une Playlist</h2>
+        <form [formGroup]="shareForm" (ngSubmit)="share(playlist)">
+            <ion-item>
+                <ion-label position="stacked">Email de l'utilisateur avec qui partager la playlist</ion-label>
+                <ion-input formControlName="email"></ion-input>
+            </ion-item>
+            <!-- toggle canRead/canWrite -->
+            <ion-item>
+                <ion-label>Droit d'accès</ion-label>
+                <div class="" style="display:flex; align-items:center">
+                    <ion-badge>Lecture</ion-badge>
+                    <ion-toggle formControlName="shareAccess"></ion-toggle>            
+                    <ion-badge>Écriture</ion-badge>
+                </div>
+            </ion-item>
+            <ion-button [disabled]="shareForm.invalid" expand="block" type="submit">Partager</ion-button>
+        </form>
+        <h2 style="margin-left:0.5rem">Utilisateurs ayant accès</h2>
+        <ion-list>
+            <ion-item *ngFor="let writeUser of playlist.canWrite">
+                <div class="shared-user-item">
+                    <div style="display:flex">
+                        <ion-badge class="ion-margin-end">Écriture</ion-badge>
+                        <ion-label>{{ writeUser }}</ion-label>
+                    </div>
+                    <ion-button (click)="removeWriteUser(playlist, writeUser)" fill="clear" color="danger">
+                        <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+                </div>
+            </ion-item>
+            <ion-item *ngFor="let readUser of playlist.canRead">
+                <div class="shared-user-item">
+                    <div style="display:flex">
+                        <ion-badge class="ion-margin-end">Lecture</ion-badge>
+                        <ion-label>{{ readUser }}</ion-label>
+                    </div>
+                    <ion-button (click)="removeReadUser(playlist, readUser)" fill="clear" color="danger">
+                        <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+                </div>
+            </ion-item>
+        </ion-list>
+    </ng-container>
 </div>

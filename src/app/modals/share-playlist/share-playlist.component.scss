@@ -1,0 +1,12 @@
+ion-toggle {
+    --handle-background: white;
+    --background-checked: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.39);
+    --handle-background-checked: white;
+  }
+
+.shared-user-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width:100%
+}

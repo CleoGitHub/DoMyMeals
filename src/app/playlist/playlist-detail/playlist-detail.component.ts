@@ -7,6 +7,7 @@ import { Todo } from 'src/app/models/todo';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { EMPTY, Observable } from 'rxjs';
 import { SharePlaylistComponent } from 'src/app/modals/share-playlist/share-playlist.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -20,7 +21,8 @@ export class PlaylistDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private playlistService: PlaylistService,
-    private modalController: ModalController) { }
+    private modalController: ModalController) { 
+    }
 
   ngOnInit(): void {
     this.playlist$ = this.playlistService.getOne(this.route.snapshot.params.id);
@@ -46,11 +48,11 @@ export class PlaylistDetailComponent implements OnInit {
     await modal.present();
   }
 
-  async openShareModal(playlist : Playlist) {
+  async openShareModal() {
     const modal = await this.modalController.create({
       component: SharePlaylistComponent,
       componentProps: {
-        playlist: playlist,
+        playlist$: this.playlist$,
       }
     });
     await modal.present();
