@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
-  <ion-breadcrumbs style="height:2em" *ngIf="playlist$ | async as playlist">
-    <ion-breadcrumb [routerLink]="'/playlist/'" routerLinkActive="true">
+  <ion-breadcrumbs style="height:3.5em;" *ngIf="playlist$ | async as playlist">
+    <ion-breadcrumb [routerLink]="'/playlist/'" routerLinkActive="true" style="font-size:1.4em">
       Playlist
     </ion-breadcrumb>
-    <ion-breadcrumb>
+    <ion-breadcrumb style="font-size:1.4em">
       {{ (playlist$ | async)?.name}}
     </ion-breadcrumb>
     <ion-button style="position:absolute;right:1em; padding:0.25rem" (click)="openShareModal(playlist)">

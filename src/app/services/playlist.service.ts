@@ -100,6 +100,33 @@ export class PlaylistService {
     });
   }
 
+  removeReadUser(playlist: Playlist, email : string){
+    let index = playlist.canRead.indexOf(email);
+    if (index != -1)
+      playlist.canRead.splice(index, 1);
+    this.afs.doc<Playlist>('playlists/' + playlist.id).set(Object.assign({}, playlist)).catch(error => {
+      console.log(error);
+      this.toastController.create({
+        message: 'Erreur lors de la modification de la playlist',
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    });
+  }
+
+  removeWriteUser(playlist: Playlist, email : string){
+    let index = playlist.canWrite.indexOf(email);
+    if (index != -1)
+      playlist.canWrite.splice(index, 1);
+    this.afs.doc<Playlist>('playlists/' + playlist.id).set(Object.assign({}, playlist)).catch(error => {
+      this.toastController.create({
+        message: 'Erreur lors de la modification de la playlist',
+        duration: 3000,
+        color: 'danger'
+        }).then(toast => toast.present());
+    });
+  }
+
   addTodo(playlistId: string, todo: Todo) {
     this.afs.collection<Todo>('playlists/' +  playlistId + '/todos').add(Object.assign({}, todo))
     .catch(error => {

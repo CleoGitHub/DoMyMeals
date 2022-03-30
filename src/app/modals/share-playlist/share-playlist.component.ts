@@ -4,6 +4,7 @@ import { Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { Playlist } from 'src/app/models/playlist';
+import { Observable, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-share-playlist',
@@ -11,7 +12,7 @@ import { Playlist } from 'src/app/models/playlist';
   styleUrls: ['./share-playlist.component.scss'],
 })
 export class SharePlaylistComponent implements OnInit {
-  @Input() playlist: Playlist;
+  @Input() playlist$: Observable<Playlist> = EMPTY;
 
 
   shareForm: FormGroup
@@ -25,9 +26,16 @@ export class SharePlaylistComponent implements OnInit {
 
   ngOnInit() {}
 
-  share(){
-    this.playlistService.sharePlaylist(this.playlist, this.shareForm.get('email').value, this.shareForm.get('shareAccess').value);
-    this.modalController.dismiss();
+  share(playlist){
+    this.playlistService.sharePlaylist(playlist, this.shareForm.get('email').value, this.shareForm.get('shareAccess').value);
+  }
+
+  removeReadUser(playlist, user){
+    this.playlistService.removeReadUser(playlist, user);
+  }
+
+  removeWriteUser(playlist, user){
+    this.playlistService.removeWriteUser(playlist, user);
   }
 
 }
