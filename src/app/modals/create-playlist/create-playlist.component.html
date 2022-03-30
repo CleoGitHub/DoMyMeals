@@ -1,8 +1,11 @@
-<form [formGroup]="playlistForm" (ngSubmit)="addPlaylist()">
-  <ion-item>
-    <ion-label position="stacked">Name</ion-label>
-    <ion-input formControlName="name"></ion-input>
-  </ion-item>
-
-  <ion-button [disabled]="playlistForm.invalid" expand="block" type="submit">Validate</ion-button>
-</form>
+<div>
+  <h2 style="margin-left:0.5rem">Ajouter une Playlist</h2>
+  <form [formGroup]="playlistForm" (ngSubmit)="addPlaylist()">
+    <ion-item>
+      <ion-label position="stacked">Name</ion-label>
+      <ion-input formControlName="name"></ion-input>
+    </ion-item>
+  
+    <ion-button style="position: absolute; bottom:0; width:100%" [disabled]="playlistForm.invalid" expand="block" type="submit">Validate</ion-button>
+  </form>
+</div>
