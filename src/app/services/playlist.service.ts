@@ -160,4 +160,12 @@ export class PlaylistService {
         }).then(toast => toast.present());
     });
   }
+
+  isCurrentUserOwner(playlist: Playlist) {
+    return this.auth.getConnectedUserAsValue().uid == playlist.owner;
+  }
+
+  isCurrentUserSharedAsWriter(playlist: Playlist) {
+    return playlist.canWrite.indexOf(this.auth.getConnectedUserAsValue().uid) != -1;
+  }
 }

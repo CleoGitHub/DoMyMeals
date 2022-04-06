@@ -38,4 +38,7 @@ export class SharePlaylistComponent implements OnInit {
     this.playlistService.removeWriteUser(playlist, user);
   }
 
+  hasUserWriteAccess(playlist) {
+    return this.playlistService.isCurrentUserOwner(playlist) || this.playlistService.isCurrentUserOwner(playlist);
+  }
 }

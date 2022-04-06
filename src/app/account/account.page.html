@@ -1,14 +1,9 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Mon Compte</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <!-- display user name -->
-  <ion-item>
-    <ion-title size="large">{{ (user | async)?.email }}</ion-title>
-  </ion-item>
-<!-- disconnect button -->
-<ion-button expand="block" (click)="signOut()" color="primary">Se déconnecter</ion-button>
+  <div style="padding: 0px 16px; display:flex; flex-direction: column;justify-content:space-between; height:100%">
+    <div>
+      <h1 style="font-size:3.5em; font-weight:700">Mon compte</h1>
+      <ion-badge>{{ (user | async)?.email }}</ion-badge>
+    </div>
+    <ion-button color="danger" expand="block" (click)="signOut()">Se déconnecter</ion-button>
+  </div>
 </ion-content>
